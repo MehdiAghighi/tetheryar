@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::prefix("auth")->middleware("guest:sanctum")->group( function () {
+Route::prefix("auth")->group( function () {
 //    Route::post("/login/index", [ \App\Http\Controllers\client\LoginController::class, "index" ]);
     Route::post("/login/SendOtpCode", [ \App\Http\Controllers\client\LoginController::class, "SendOtpCode" ]);
     Route::post('/login/verifyOtpCode/{user:mobile}', [\App\Http\Controllers\client\LoginController::class,'verifyOtpCode']);
