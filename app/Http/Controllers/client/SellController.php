@@ -15,6 +15,7 @@ use App\Models\TetherPrice;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use phpDocumentor\Reflection\DocBlock\Tags\Reference\Url;
 
 class SellController extends Controller
 {
@@ -65,8 +66,8 @@ class SellController extends Controller
         {
             return redirect(route('client.sell.step1.create'));
         }
-        $sellRequest=SellRequest::query()->where('mobile' , session()->get('mobile'))->latest()->first();
-       $tomanAmount = session('tetherAmount') * TetherPrice::getSellTetherPrice();
+        $sellRequest = SellRequest::query()->where('mobile' , session()->get('mobile'))->latest()->first();
+        $tomanAmount = session('tetherAmount') * TetherPrice::getSellTetherPrice();
         return view('client.sell.step3',[
             'tetherAmount' => number_format(session('tetherAmount') , 2),
             'sellRequest' => $sellRequest,
@@ -170,9 +171,9 @@ class SellController extends Controller
             'tetherStatus' => 'not approved' ,
 
         ]);
-        
+
         sendTrackingCodeTether( session()->get('mobile') , $sellRequest->trackingCode);
-        
+
          smsAdminSellRequest($sellRequest->trackingCode , '09123805021');
          smsAdminSellRequest($sellRequest->trackingCode , '09138802477');
         session()->forget('tetherAmount');
@@ -195,5 +196,92 @@ class SellController extends Controller
         return view('client.sell.result' , [
            'trackingCode' => $trackingCode ,
         ]);
+    }
+
+
+    public function apiStepOne() {
+        return response()->json( [
+            'sellPrice' => TetherPrice::getSellTetherPrice(),
+            'sellPricePersian' => TetherPrice::englishToPersianNumber(TetherPrice::getSellTetherPrice()),
+        ] );
+    }
+
+    public function apiCheckAuthStatus() {
+        return response()->json([
+            'tetherAmount' => number_format(session('tetherAmount') , 2),
+            'authStatus' => Authentication::checkUserAuth(),
+        ]);
+    }
+
+    public function apiGetLastSellRequestData(Request  $request) {
+        $sellRequest = SellRequest::query()->where('mobile' , $request->get("mobile"))->latest()->first();
+        $tomanAmount = $request->get("tetherAmount") * TetherPrice::getSellTetherPrice();
+        return response()->json([
+            'tetherAmount' => number_format($request->get("tetherAmount")),
+            'sellRequest' => $sellRequest,
+            'tomanAmount' => $tomanAmount,
+        ]);
+    }
+
+    public function storeSellRequest( Request  $request ) {
+        $validateData = $request->validate([
+            "name" => [ "nullable" ],
+            "mobile" => [ "required" ],
+            "shaba" => [ "nullable" ],
+            "cart" => [ "nullable" ],
+            "mail" => [ "nullable" ],
+            "bank" => [ "required" ],
+            "tetherAmount" => [ "required" ],
+            "tomanAmount",
+        ]);
+        $tomanAmount = TetherPrice::getSellTetherPrice() * $request->get("mobile");
+        $trackingCode= random_int(111111,999999);
+
+        $sellRequest = SellRequest::query()->create([
+            'name' => $request->get("name") ,
+            'mobile' => $request->get("mobile"),
+            'shaba' => $request->get("shaba") ,
+            'cart' => $request->get("cart") ,
+            'mail' => $request->get("mail") ,
+            'bank' => $request->get("bank") ,
+            'tetherSellPrice' => TetherPrice::getsellTetherPrice(),
+            'tetherAmountSend' => $request->get("mobile") ,
+            'tomanAmount' => $tomanAmount ,
+            'trackingCode' => $trackingCode,
+        ]);
+        $wallet = Wallet::query()->get();
+
+        return response()->json([
+            "request" => $sellRequest,
+            "wallet" => $wallet
+        ], 201);
+    }
+
+    public function lastStep( Request $request ) {
+
+        $request->validate([
+            "mobile" => ["required"],
+            "tether_type" => ["required"],
+            "txid" => ["required"],
+        ]);
+
+        $sellRequest = SellRequest::query()->where('mobile' , $request->get("mobile") )->latest()->first();
+        $sellRequest->update([
+            'tether_type' => $request->get('tether_type'),
+            'txid' => $request->get('txid'),
+            'tetherStatus' => 'not approved' ,
+        ]);
+
+        /// TODO :: SET THESE BACK
+        // sendTrackingCodeTether( $request->get("mobile") , $sellRequest->trackingCode);
+
+        /// TODO :: SET THESE BACK
+        //smsAdminSellRequest($sellRequest->trackingCode , '09123805021');
+        //smsAdminSellRequest($sellRequest->trackingCode , '09138802477');
+
+
+        return response()->json([
+            "message" => ""
+        ], 200);
     }
 }
