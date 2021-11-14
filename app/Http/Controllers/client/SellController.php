@@ -231,10 +231,9 @@ class SellController extends Controller
             "cart" => [ "nullable" ],
             "mail" => [ "nullable" ],
             "bank" => [ "required" ],
-            "tetherAmount" => [ "required" ],
-            "tomanAmount",
+            "tetherAmount" => [ "required" ]
         ]);
-        $tomanAmount = TetherPrice::getSellTetherPrice() * $request->get("mobile");
+        $tomanAmount = TetherPrice::getSellTetherPrice() * $request->get("tetherAmount");
         $trackingCode= random_int(111111,999999);
 
         $sellRequest = SellRequest::query()->create([
