@@ -203,6 +203,8 @@ class SellController extends Controller
         return response()->json( [
             'sellPrice' => TetherPrice::getSellTetherPrice(),
             'sellPricePersian' => TetherPrice::englishToPersianNumber(TetherPrice::getSellTetherPrice()),
+            'buyPrice' => TetherPrice::getBuyTetherPrice(),
+            'buyPricePersian' => TetherPrice::englishToPersianNumber(TetherPrice::getBuyTetherPrice()),
         ] );
     }
 

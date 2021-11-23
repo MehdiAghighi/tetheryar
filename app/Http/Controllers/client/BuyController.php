@@ -166,9 +166,6 @@ class BuyController extends Controller
 
     public function result(BuyRequest $buyResult)
     {
-//        dd($buyResult);
-
-
        if($buyResult->user_id != auth()->user()->id)
        {
            abort(403);
@@ -178,7 +175,59 @@ class BuyController extends Controller
         ]);
     }
 
+    public function apiStoreBuyRequest( Request $request ) {
+        $validatedData = $request->validate([
+            "tetherAmount" => [ "required" ],
+            'walletAddress' => ['required' , 'min:25' , 'max:90' ,'alpha_num'],
+            'tether_type' => ['required' , 'in:ERC-20,TRC-20'  ],
+//            'captcha' => ['required', 'captcha_api:' . request('key') . ',math'] ,
+        ]);
 
+        $tomanAmount= intval($validatedData["tetherAmount"] * TetherPrice::getBuyTetherPrice());
 
+        $buyRequest = BuyRequest::query()->create([
+            'user_id' => auth("sanctum")->user()->id,
+            'tetherAmount' => $validatedData["tetherAmount"],
+            'tomanAmount'=> $tomanAmount,
+            'tetherBuyPrice' => TetherPrice::getBuyTetherPrice() ,
+            'tether_type' => $request->get('tether_type'),
+            'walletAddress' => $request->get('walletAddress'),
+        ]);
+
+        $invoice = new Invoice;
+        $invoice ->amount($tomanAmount);
+
+        /// TODO : CHANGE THIS URL
+        $payment = Payment::callbackUrl( env("APP_URL") . "api/buy/callback" )->purchase($invoice , function ($driver , $transactionId) use ($buyRequest)
+        {
+            $buyRequest->update([
+                'transaction_id' => $transactionId
+            ]);
+        })->pay();
+
+        return response()->json([
+            "buy_request" => $buyRequest,
+            "payment_address" => $payment->getAction()
+        ]);
+    }
+
+    public function apiCallback(Request $request)
+    {
+        $buyRequest = BuyRequest::query()->where('transaction_id' , $request->get('Authority'))->first();
+
+        $buyRequest->update([
+            'payment_status' => $request->get('Status')
+        ]);
+        if($request->get('Status') == 'OK')
+        {
+            /// TODO : UNCOMMENT THESE
+            sendTrackingCode($buyRequest->user->mobile , substr($request->get('Authority') , -6) );
+//            smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09138802477');
+//            smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09123805021');
+        }
+        return response()->json([
+            "buy_request" => $buyRequest,
+        ]);
+    }
 
 }

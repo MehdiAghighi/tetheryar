@@ -46,3 +46,8 @@ Route::prefix("sell")->middleware("auth:sanctum")->group( function () {
     Route::post("storeSellRequest" , [ \App\Http\Controllers\client\SellController::class, 'storeSellRequest' ]);
     Route::post("lastStep" , [ \App\Http\Controllers\client\SellController::class, 'lastStep' ]);
 } );
+
+Route::prefix("buy")->middleware("auth:sanctum")->group( function () {
+    Route::post("storeBuyRequest" , [ \App\Http\Controllers\client\BuyController::class, 'apiStoreBuyRequest' ]);
+    Route::get("callback" , [ \App\Http\Controllers\client\BuyController::class, 'apiCallback' ])->withoutMiddleware("auth:sanctum");
+} );
