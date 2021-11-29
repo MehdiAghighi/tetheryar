@@ -25,9 +25,9 @@ Route::prefix("auth")->group( function () {
 
 Route::get('/auth/check', [\App\Http\Controllers\client\AuthController::class,'checkAuth']);
 Route::get('/auth/create', [\App\Http\Controllers\client\AuthController::class,'create']);
-Route::post('/auth/store', [\App\Http\Controllers\client\AuthController::class,'store']);
+Route::post('/auth/storeAuth', [\App\Http\Controllers\client\AuthController::class,'store']);
 Route::get('/auth/edit', [\App\Http\Controllers\client\AuthController::class,'edit']);
-Route::post('/auth/update', [\App\Http\Controllers\client\AuthController::class,'update']);
+Route::post('/auth/updateAuth', [\App\Http\Controllers\client\AuthController::class,'update']);
 
 // Logout
 Route::delete('/logout' , [\App\Http\Controllers\client\AuthController::class , 'logout']);
