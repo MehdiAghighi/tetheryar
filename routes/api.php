@@ -39,12 +39,14 @@ Route::prefix("profile")->middleware("auth:sanctum")->group( function () {
     Route::get('/referrals' , [\App\Http\Controllers\client\HomeController::class,'referrals']);
 } );
 
-Route::prefix("sell")->middleware("auth:sanctum")->group( function () {
+Route::prefix("sell")->group( function () {
     Route::get("step1" , [ \App\Http\Controllers\client\SellController::class, 'apiStepOne' ]);
-    Route::get("checkAuth" , [ \App\Http\Controllers\client\SellController::class, 'apiCheckAuthStatus' ]);
-    Route::post("getLastSellRequest" , [ \App\Http\Controllers\client\SellController::class, 'apiGetLastSellRequestData' ]);
-    Route::post("storeSellRequest" , [ \App\Http\Controllers\client\SellController::class, 'storeSellRequest' ]);
-    Route::post("lastStep" , [ \App\Http\Controllers\client\SellController::class, 'lastStep' ]);
+    Route::middleware("auth:sanctum")->group( function () {
+        Route::get("checkAuth" , [ \App\Http\Controllers\client\SellController::class, 'apiCheckAuthStatus' ]);
+        Route::post("getLastSellRequest" , [ \App\Http\Controllers\client\SellController::class, 'apiGetLastSellRequestData' ]);
+        Route::post("storeSellRequest" , [ \App\Http\Controllers\client\SellController::class, 'storeSellRequest' ]);
+        Route::post("lastStep" , [ \App\Http\Controllers\client\SellController::class, 'lastStep' ]);
+    } );
 } );
 
 Route::prefix("buy")->middleware("auth:sanctum")->group( function () {
