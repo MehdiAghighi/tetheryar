@@ -24,10 +24,12 @@ Route::prefix("auth")->group( function () {
 } );
 
 Route::get('/auth/check', [\App\Http\Controllers\client\AuthController::class,'checkAuth']);
-Route::get('/auth/create', [\App\Http\Controllers\client\AuthController::class,'create']);
-Route::post('/auth/storeAuth', [\App\Http\Controllers\client\AuthController::class,'store']);
-Route::get('/auth/edit', [\App\Http\Controllers\client\AuthController::class,'edit']);
-Route::post('/auth/updateAuth', [\App\Http\Controllers\client\AuthController::class,'update']);
+Route::middleware("auth:sanctum")->group( function () {
+    Route::get('/auth/create', [\App\Http\Controllers\client\AuthController::class,'create']);
+    Route::post('/auth/storeAuth', [\App\Http\Controllers\client\AuthController::class,'store']);
+    Route::get('/auth/edit', [\App\Http\Controllers\client\AuthController::class,'edit']);
+    Route::post('/auth/updateAuth', [\App\Http\Controllers\client\AuthController::class,'update']);
+} );
 
 // Logout
 Route::delete('/logout' , [\App\Http\Controllers\client\AuthController::class , 'logout']);
@@ -49,7 +51,7 @@ Route::prefix("sell")->group( function () {
     Route::post("lastStep" , [ \App\Http\Controllers\client\SellController::class, 'lastStep' ]);
 } );
 
-Route::prefix("buy")->middleware("auth:sanctum")->group( function () {
+Route::get("buy/callback" , [ \App\Http\Controllers\client\BuyController::class, 'apiCallback' ]);
+Route::prefix("buy")->middleware(["auth:sanctum", "auth.verified"])->group( function () {
     Route::post("storeBuyRequest" , [ \App\Http\Controllers\client\BuyController::class, 'apiStoreBuyRequest' ]);
-    Route::get("callback" , [ \App\Http\Controllers\client\BuyController::class, 'apiCallback' ])->withoutMiddleware("auth:sanctum");
 } );

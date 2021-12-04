@@ -180,6 +180,7 @@ class BuyController extends Controller
             "tetherAmount" => [ "required" ],
             'walletAddress' => ['required' , 'min:25' , 'max:90' ,'alpha_num'],
             'tether_type' => ['required' , 'in:ERC-20,TRC-20'  ],
+/// TODO : BRING THIS CAPTCHA
 //            'captcha' => ['required', 'captcha_api:' . request('key') . ',math'] ,
         ]);
 
