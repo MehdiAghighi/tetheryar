@@ -112,11 +112,11 @@ class HomeController extends Controller
         ]);
     }
 
-    public function sellLogs()
+    public function sellLogs( $mobile )
     {
         if ( request()->wantsJson() )
             return response([
-                "sellRequests" => SellRequest::query()->where('mobile' , auth()->user()->mobile)->whereNotNull('txid')->orderByDesc('id')->paginate(15),
+                "sellRequests" => SellRequest::query()->where('mobile' , $mobile)->whereNotNull('txid')->orderByDesc('id')->paginate(15),
             ]);
         return view('client.profile.sell-Logs',[
             'sellRequests' => SellRequest::query()->where('mobile' , auth()->user()->mobile)->whereNotNull('txid')->orderByDesc('id')->paginate(15),

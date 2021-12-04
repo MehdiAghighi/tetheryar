@@ -33,10 +33,12 @@ Route::post('/auth/updateAuth', [\App\Http\Controllers\client\AuthController::cl
 Route::delete('/logout' , [\App\Http\Controllers\client\AuthController::class , 'logout']);
 
 Route::prefix("profile")->middleware("auth:sanctum")->group( function () {
-    Route::get("" , [ \App\Http\Controllers\client\HomeController::class, 'profile' ]);
-    Route::get('/buy-logs' , [\App\Http\Controllers\client\HomeController::class,'buyLogs']);
-    Route::get('/sell-logs' , [\App\Http\Controllers\client\HomeController::class,'sellLogs']);
-    Route::get('/referrals' , [\App\Http\Controllers\client\HomeController::class,'referrals']);
+    Route::get('/sell-logs/{mobile}' , [\App\Http\Controllers\client\HomeController::class,'sellLogs']);
+    Route::middleware("auth:sanctum")->group( function () {
+        Route::get("" , [ \App\Http\Controllers\client\HomeController::class, 'profile' ]);
+        Route::get('/buy-logs' , [\App\Http\Controllers\client\HomeController::class,'buyLogs']);
+        Route::get('/referrals' , [\App\Http\Controllers\client\HomeController::class,'referrals']);
+    } );
 } );
 
 Route::prefix("sell")->group( function () {
