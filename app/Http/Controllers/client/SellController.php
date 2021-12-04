@@ -246,7 +246,7 @@ class SellController extends Controller
             'mail' => $request->get("mail") ,
             'bank' => $request->get("bank") ,
             'tetherSellPrice' => TetherPrice::getsellTetherPrice(),
-            'tetherAmountSend' => $request->get("mobile") ,
+            'tetherAmountSend' => $request->get("tetherAmount") ,
             'tomanAmount' => $tomanAmount ,
             'trackingCode' => $trackingCode,
         ]);
