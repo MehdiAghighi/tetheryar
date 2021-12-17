@@ -30,7 +30,8 @@ class AuthRequest extends FormRequest
             'nationalCode' => ['required' ,'size:10','unique:authentications,nationalCode' , new Nationalcode ],
             'phoneNumber' => ['required' ],
             'callTime' => ['required' , 'in:9-11,11-13,13-15,15-17,17-19,19-21,21-23' ],
-            'nationalCardPicture' => ['required','mimes:png,jpg,jpeg,mpeg,svg','max:2048'],
+            'nationalCardPicture' => [ !request()->wantsJson() ? 'required' : 'nullable' ,'mimes:png,jpg,jpeg,mpeg,svg','max:2048' ],
+            'nationalCardBase64' => [ request()->wantsJson() ? 'required' : 'nullable', 'string' ],
             'captcha' => ['required', request()->wantsJson() ?  'captcha_api:' . request('key') . ',math' : 'captcha'] ,
         ];
     }
