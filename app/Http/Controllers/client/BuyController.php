@@ -187,7 +187,7 @@ class BuyController extends Controller
         $tomanAmount= intval($validatedData["tetherAmount"] * TetherPrice::getBuyTetherPrice());
 
         $buyRequest = BuyRequest::query()->create([
-            'user_id' => Authentication::where('user_id' , auth("sanctum")->user()->id)->first()->id,
+            'user_id' => auth("sanctum")->user()->id,
             'tetherAmount' => $validatedData["tetherAmount"],
             'tomanAmount'=> $tomanAmount,
             'tetherBuyPrice' => TetherPrice::getBuyTetherPrice() ,

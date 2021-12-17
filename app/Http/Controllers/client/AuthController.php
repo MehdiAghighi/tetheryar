@@ -67,24 +67,24 @@ class AuthController extends Controller
 
     public function store(AuthRequest $request)
     {
-        if ( $request->wantsJson() ) {
-            $base64String = $request->get("nationalCardBase64");
-            $memeType = "";
-            if ( strpos($base64String, "data:image/png;base64") !== false )
-                $memeType = "png";
-            elseif ( strpos($base64String, "data:image/jpeg;base64") !== false )
-                $memeType = "jpeg";
-            elseif ( strpos($base64String, "data:image/jpg;base64") !== false )
-                $memeType = "jpg";
-            $image = str_replace("data:image/{$memeType};base64," , '', $base64String);
-            $image = str_replace(' ', '+', $image);
-            $imageName = Str::random(10) . '.' . $memeType;
-            $file = File::put(storage_path("app"). '/public/images/' . $imageName, base64_decode($image));
-            $pathNationalCardPicture = 'public/images/' . $imageName;
-        }
-        else
-            $pathNationalCardPicture = $request->file('nationalCardPicture')->storeAs('public/images',
-                $request->file('nationalCardPicture')->hashName());
+//        if ( $request->wantsJson() ) {
+//            $base64String = $request->get("nationalCardBase64");
+//            $memeType = "";
+//            if ( strpos($base64String, "data:image/png;base64") !== false )
+//                $memeType = "png";
+//            elseif ( strpos($base64String, "data:image/jpeg;base64") !== false )
+//                $memeType = "jpeg";
+//            elseif ( strpos($base64String, "data:image/jpg;base64") !== false )
+//                $memeType = "jpg";
+//            $image = str_replace("data:image/{$memeType};base64," , '', $base64String);
+//            $image = str_replace(' ', '+', $image);
+//            $imageName = Str::random(10) . '.' . $memeType;
+//            $file = File::put(storage_path("app"). '/public/images/' . $imageName, base64_decode($image));
+//            $pathNationalCardPicture = 'public/images/' . $imageName;
+//        }
+//        else
+        $pathNationalCardPicture = $request->file('nationalCardPicture')->storeAs('public/images',
+            $request->file('nationalCardPicture')->hashName());
 
         if( $request->get('identifier_code') != null )
         {
