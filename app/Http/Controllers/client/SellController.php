@@ -273,12 +273,10 @@ class SellController extends Controller
             'tetherStatus' => 'not approved' ,
         ]);
 
-        /// TODO :: SET THESE BACK
-        // sendTrackingCodeTether( $request->get("mobile") , $sellRequest->trackingCode);
+         sendTrackingCodeTether( $request->get("mobile") , $sellRequest->trackingCode);
 
-        /// TODO :: SET THESE BACK
-        //smsAdminSellRequest($sellRequest->trackingCode , '09123805021');
-        //smsAdminSellRequest($sellRequest->trackingCode , '09138802477');
+        smsAdminSellRequest($sellRequest->trackingCode , '09123805021');
+        smsAdminSellRequest($sellRequest->trackingCode , '09138802477');
 
 
         return response()->json([

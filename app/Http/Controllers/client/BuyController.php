@@ -180,8 +180,7 @@ class BuyController extends Controller
             "tetherAmount" => [ "required" ],
             'walletAddress' => ['required' , 'min:25' , 'max:90' ,'alpha_num'],
             'tether_type' => ['required' , 'in:ERC-20,TRC-20'  ],
-/// TODO : BRING THIS CAPTCHA
-//            'captcha' => ['required', 'captcha_api:' . request('key') . ',math'] ,
+            'captcha' => ['required', 'captcha_api:' . request('key') . ',math'] ,
         ]);
 
         $tomanAmount= intval($validatedData["tetherAmount"] * TetherPrice::getBuyTetherPrice());
@@ -199,7 +198,7 @@ class BuyController extends Controller
         $invoice ->amount($tomanAmount);
 
         /// TODO : CHANGE THIS URL
-        $payment = Payment::callbackUrl( env("APP_URL") . "api/buy/callback" )->purchase($invoice , function ($driver , $transactionId) use ($buyRequest)
+        $payment = Payment::callbackUrl( env("APP_URL") . "/api/buy/callback" )->purchase($invoice , function ($driver , $transactionId) use ($buyRequest)
         {
             $buyRequest->update([
                 'transaction_id' => $transactionId
@@ -221,14 +220,11 @@ class BuyController extends Controller
         ]);
         if($request->get('Status') == 'OK')
         {
-            /// TODO : UNCOMMENT THESE
             sendTrackingCode($buyRequest->user->mobile , substr($request->get('Authority') , -6) );
-//            smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09138802477');
-//            smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09123805021');
+            smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09138802477');
+            smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09123805021');
         }
-        return response()->json([
-            "buy_request" => $buyRequest,
-        ]);
+        return redirect("https://tetheryar.app/payment");
     }
 
 }

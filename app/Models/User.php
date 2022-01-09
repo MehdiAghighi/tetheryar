@@ -72,8 +72,6 @@ class User extends Authenticatable
         }
 
         sendOtpCode($request-> get('mobile') , $otp);
-        /// TODO : REMOVE THIS FROM HERE ( VERY IMPORTANT )
-        Log::info($otp);
         return $user;
     }
 

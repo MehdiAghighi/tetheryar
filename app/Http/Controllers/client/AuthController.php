@@ -117,9 +117,8 @@ class AuthController extends Controller
                 'nationalCardPicture'=>$pathNationalCardPicture,
             ]);
 
-        smsAdminNewAuth(auth()->user()->id , '09307672514');
-//        smsAdminNewAuth(auth()->user()->id , '09123805021');
-//        smsAdminNewAuth(auth()->user()->id , '09138802477');
+        smsAdminNewAuth(auth()->user()->id , '09123805021');
+        smsAdminNewAuth(auth()->user()->id , '09138802477');
 
         if ( request()->wantsJson() )
             return response()->json([
@@ -176,9 +175,9 @@ class AuthController extends Controller
             'status' => 'not approved',
             'nationalCardPicture' => $nationalCardPicture,
         ]);
-        /// TODO : UNCOMMENT THESE ( ALSO SOME TOP )
-//        smsAdminNewAuth(auth()->user()->id , '09123805021');
-//        smsAdminNewAuth(auth()->user()->id , '09138802477');
+
+        smsAdminNewAuth(auth()->user()->id , '09123805021');
+        smsAdminNewAuth(auth()->user()->id , '09138802477');
 
         if ( request()->wantsJson() )
             return response()->json([
