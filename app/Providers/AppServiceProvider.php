@@ -7,6 +7,7 @@ use App\Models\UserWallet;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -57,6 +58,8 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         });
+
+        Schema::defaultStringLength(191);
 
     }
 }
