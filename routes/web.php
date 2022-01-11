@@ -35,6 +35,12 @@ use Illuminate\Support\Facades\Route;
 //    Artisan::call('storage:link') ;
 //});
 
+Route::get("payment/{status}", function ( $status ) {
+    return view("client.api-callback", [
+        "status" => $status
+    ]);
+})->name("api.callback");
+
 Route::get('/api', [ApiController::class,'api'])->name('api');
 
 Route::post('/buyPrice', [ApiController::class,'buyPrice'])->name('api.buyPrice');

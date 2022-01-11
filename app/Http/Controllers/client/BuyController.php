@@ -224,7 +224,7 @@ class BuyController extends Controller
             smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09138802477');
             smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09123805021');
         }
-        return redirect("https://tetheryar.app/payment");
+        return redirect()->route("api.callback", [ "status" => $request->get('Status') == 'OK' ? "successful" : "failed" ]);
     }
 
 }
