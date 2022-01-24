@@ -226,9 +226,9 @@ class BuyController extends Controller
         }
         $isWebApp = (bool) $request->query("webapp", false);
         if ( $isWebApp )
-            return redirect(env("WEBAPP_PAYMENT_CALLBACK"));
+            return redirect()->route("api.callback", [ "status" => $request->get('Status') == 'OK' ? "successful" : "failed", "webapp" => true ]);
         else
-            return redirect()->route("api.callback", [ "status" => $request->get('Status') == 'OK' ? "successful" : "failed" ]);
+            return redirect()->route("api.callback", [ "status" => $request->get('Status') == 'OK' ? "successful" : "failed", "webapp" => false ]);
     }
 
 }

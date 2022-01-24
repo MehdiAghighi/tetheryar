@@ -46,7 +46,7 @@
                             </p>
                             <div class="mt-10 max-w-sm mx-auto sm:max-w-none sm:flex sm:justify-center">
                                 <div class="space-y-4 sm:space-y-0 sm:mx-auto sm:inline-grid sm:grid-cols-1 sm:gap-5">
-                                    <a href="app://tetheryar/payment" class="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 bg-opacity-80 hover:bg-opacity-70 sm:px-8">
+                                    <a @if(!$webapp) href="app://tetheryar/payment" @else href="{{ env('WEBAPP_PAYMENT_CALLBACK') }}" @endif class="flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 bg-opacity-80 hover:bg-opacity-70 sm:px-8">
                                         بازگشت به اپلیکیشن
                                     </a>
                                 </div>
