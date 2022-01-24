@@ -198,7 +198,7 @@ class BuyController extends Controller
         $invoice ->amount($tomanAmount);
 
         /// TODO : CHANGE THIS URL
-        $payment = Payment::callbackUrl( env("APP_URL") . "/api/buy/callback" )->purchase($invoice , function ($driver , $transactionId) use ($buyRequest)
+        $payment = Payment::callbackUrl( env("APP_URL") . "/api/buy/callback?webapp={$request->header('X-IS-WEBAPP', false)}" )->purchase($invoice , function ($driver , $transactionId) use ($buyRequest)
         {
             $buyRequest->update([
                 'transaction_id' => $transactionId
@@ -224,7 +224,11 @@ class BuyController extends Controller
             smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09138802477');
             smsAdminBuyRequest(substr($request->get('Authority') , -6) , '09123805021');
         }
-        return redirect()->route("api.callback", [ "status" => $request->get('Status') == 'OK' ? "successful" : "failed" ]);
+        $isWebApp = (bool) $request->query("webapp", false);
+        if ( $isWebApp )
+            return redirect(env("WEBAPP_PAYMENT_CALLBACK"));
+        else
+            return redirect()->route("api.callback", [ "status" => $request->get('Status') == 'OK' ? "successful" : "failed" ]);
     }
 
 }

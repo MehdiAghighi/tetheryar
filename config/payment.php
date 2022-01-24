@@ -209,7 +209,7 @@ return [
             'zaringateApiPaymentUrl' => 'https://www.zarinpal.com/pg/StartPay/:authority/ZarinGate',
             'zaringateApiVerificationUrl' => 'https://ir.zarinpal.com/pg/services/WebGate/wsdl',
             //// TODO : CHANGE CALLBACK URL AND MODE
-            'mode' => 'sandbox', // can be normal, sandbox, zaringate
+            'mode' => env("ZARINPAL_MODE"), // can be normal, sandbox, zaringate
             'merchantId' => '8f90e949-51d8-4473-97b8-b6c42b2f574f',
             'callbackUrl' => 'http://tetheryar.com/buy/callback',
             'description' => 'payment using zarinpal',
